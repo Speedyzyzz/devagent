@@ -1,0 +1,28 @@
+id: case_002_cart_tax
+name: "Cart Total Tax Calculation Omission"
+repository: demo-repo
+issue: >
+  Cart totals are calculated incorrectly because sales tax is completely omitted from the final total.
+  The calculation must apply tax_rate to the net subtotal (subtotal - discount) and add it to the final total.
+verification:
+  runner: pytest
+  args: ["tests/test_cart.py"]
+expected_files:
+  - backend/app/cart/service.py
+scripted_steps:
+  - name: list_directory
+    arguments: { path: "." }
+  - name: search_code
+    arguments: { query: "calculate_cart_total" }
+  - name: read_file_lines
+    arguments: { path: "backend/app/cart/service.py", start_line: 1, end_line: 15 }
+  - name: apply_patch
+    arguments:
+      path: "backend/app/cart/service.py"
+      search_block: "    # BUGGY IMPLEMENTATION: tax is omitted\n    total = subtotal - discount\n    return round(total, 2)"
+      replace_block: "    net = subtotal - discount\n    tax = net * tax_rate\n    total = net + tax\n    return round(total, 2)"
+  - name: execute_verification
+    arguments:
+      runner: pytest
+      args: ["tests/test_cart.py"]
+root_cause: "calculate_cart_total calculated total as subtotal - discount without factoring in applicable tax."

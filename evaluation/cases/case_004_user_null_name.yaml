@@ -1,0 +1,28 @@
+id: case_004_user_null_name
+name: "User Null Display Name AttributeError"
+repository: demo-repo
+issue: >
+  format_user_header crashes with AttributeError: 'NoneType' object has no attribute 'upper'
+  when user.display_name is None. It should fall back to 'ANONYMOUS'.
+verification:
+  runner: pytest
+  args: ["tests/test_users.py"]
+expected_files:
+  - backend/app/users/service.py
+scripted_steps:
+  - name: list_directory
+    arguments: { path: "." }
+  - name: search_code
+    arguments: { query: "format_user_header" }
+  - name: read_file_lines
+    arguments: { path: "backend/app/users/service.py", start_line: 1, end_line: 20 }
+  - name: apply_patch
+    arguments:
+      path: "backend/app/users/service.py"
+      search_block: "    # BUGGY: Assumes display_name is always non-null string\n    return f\"USER: {user.display_name.upper()}\""
+      replace_block: "    name = user.display_name.upper() if user.display_name else \"ANONYMOUS\"\n    return f\"USER: {name}\""
+  - name: execute_verification
+    arguments:
+      runner: pytest
+      args: ["tests/test_users.py"]
+root_cause: "format_user_header called .upper() on display_name without checking if it was None."

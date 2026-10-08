@@ -1,0 +1,28 @@
+id: case_003_catalog_pagination
+name: "Catalog Pagination Off-By-One Truncation"
+repository: demo-repo
+issue: >
+  Catalog items pagination returns 4 items instead of 5 for a page_size of 5.
+  There is an off-by-one error subtracting 1 from the slice end index in paginate_items.
+verification:
+  runner: pytest
+  args: ["tests/test_catalog.py"]
+expected_files:
+  - backend/app/catalog/paginator.py
+scripted_steps:
+  - name: list_directory
+    arguments: { path: "." }
+  - name: search_code
+    arguments: { query: "paginate_items" }
+  - name: read_file_lines
+    arguments: { path: "backend/app/catalog/paginator.py", start_line: 1, end_line: 16 }
+  - name: apply_patch
+    arguments:
+      path: "backend/app/catalog/paginator.py"
+      search_block: "    # BUG: subtracting 1 truncates the last element in slice notation\n    end = (page * page_size) - 1"
+      replace_block: "    end = page * page_size"
+  - name: execute_verification
+    arguments:
+      runner: pytest
+      args: ["tests/test_catalog.py"]
+root_cause: "paginate_items subtracted 1 from slice end index, dropping the last element on each page."

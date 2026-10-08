@@ -1,0 +1,28 @@
+id: case_005_cart_creation_status
+name: "Cart Creation Endpoint 404 Status Bug"
+repository: demo-repo
+issue: >
+  create_cart_endpoint returns HTTP status code 404 instead of 201 Created upon creating a new cart.
+  It must return status_code 201.
+verification:
+  runner: pytest
+  args: ["tests/test_api_cart.py"]
+expected_files:
+  - backend/app/api/cart.py
+scripted_steps:
+  - name: list_directory
+    arguments: { path: "." }
+  - name: search_code
+    arguments: { query: "create_cart_endpoint" }
+  - name: read_file_lines
+    arguments: { path: "backend/app/api/cart.py", start_line: 1, end_line: 18 }
+  - name: apply_patch
+    arguments:
+      path: "backend/app/api/cart.py"
+      search_block: "    return {\n        \"status_code\": 404,  # BUG: Should be 201\n        \"cart_id\": f\"cart_{user_id}\",\n        \"items\": [],\n    }"
+      replace_block: "    return {\n        \"status_code\": 201,\n        \"cart_id\": f\"cart_{user_id}\",\n        \"items\": [],\n    }"
+  - name: execute_verification
+    arguments:
+      runner: pytest
+      args: ["tests/test_api_cart.py"]
+root_cause: "create_cart_endpoint hardcoded status_code: 404 instead of HTTP 201 Created."

@@ -1,0 +1,29 @@
+id: case_001_guest_session
+name: "Guest Checkout Session Expiry 401"
+repository: demo-repo
+issue: >
+  Users receive a 401 error when checking out after their guest session expires.
+  Expired guest sessions must fall back to an anonymous session via create_anonymous_session()
+  rather than raising an HTTPException.
+verification:
+  runner: pytest
+  args: ["tests/test_auth.py"]
+expected_files:
+  - backend/app/auth/session.py
+scripted_steps:
+  - name: list_directory
+    arguments: { path: "." }
+  - name: search_code
+    arguments: { query: "validate_guest_session" }
+  - name: read_file_lines
+    arguments: { path: "backend/app/auth/session.py", start_line: 15, end_line: 35 }
+  - name: apply_patch
+    arguments:
+      path: "backend/app/auth/session.py"
+      search_block: "    if is_expired:\n        raise HTTPException(status_code=401, detail=\"Guest session expired\")"
+      replace_block: "    if is_expired:\n        return create_anonymous_session()"
+  - name: execute_verification
+    arguments:
+      runner: pytest
+      args: ["tests/test_auth.py"]
+root_cause: "Expired guest sessions were raising HTTP 401 instead of returning an anonymous fallback session."

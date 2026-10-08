@@ -1,0 +1,87 @@
+{
+  "total_cases": 5,
+  "resolved_cases": 5,
+  "verified_resolution_rate": "100.0%",
+  "avg_iterations": 6.0,
+  "avg_tool_calls": 5.0,
+  "avg_verification_attempts": 1.0,
+  "avg_patch_lines": 3.2,
+  "avg_runtime_seconds": 0.13,
+  "cases": [
+    {
+      "id": "case_001_guest_session",
+      "name": "Guest Checkout Session Expiry 401",
+      "resolved": true,
+      "status": "COMPLETED",
+      "iterations": 6,
+      "tool_calls": 5,
+      "verification_attempts": 1,
+      "patch_lines": 2,
+      "runtime_seconds": 0.13,
+      "files_changed": [
+        "backend/app/auth/session.py"
+      ],
+      "error": null
+    },
+    {
+      "id": "case_002_cart_tax",
+      "name": "Cart Total Tax Calculation Omission",
+      "resolved": true,
+      "status": "COMPLETED",
+      "iterations": 6,
+      "tool_calls": 5,
+      "verification_attempts": 1,
+      "patch_lines": 5,
+      "runtime_seconds": 0.13,
+      "files_changed": [
+        "backend/app/cart/service.py"
+      ],
+      "error": null
+    },
+    {
+      "id": "case_003_catalog_pagination",
+      "name": "Catalog Pagination Off-By-One Truncation",
+      "resolved": true,
+      "status": "COMPLETED",
+      "iterations": 6,
+      "tool_calls": 5,
+      "verification_attempts": 1,
+      "patch_lines": 3,
+      "runtime_seconds": 0.12,
+      "files_changed": [
+        "backend/app/catalog/paginator.py"
+      ],
+      "error": null
+    },
+    {
+      "id": "case_004_user_null_name",
+      "name": "User Null Display Name AttributeError",
+      "resolved": true,
+      "status": "COMPLETED",
+      "iterations": 6,
+      "tool_calls": 5,
+      "verification_attempts": 1,
+      "patch_lines": 4,
+      "runtime_seconds": 0.13,
+      "files_changed": [
+        "backend/app/users/service.py"
+      ],
+      "error": null
+    },
+    {
+      "id": "case_005_cart_creation_status",
+      "name": "Cart Creation Endpoint 404 Status Bug",
+      "resolved": true,
+      "status": "COMPLETED",
+      "iterations": 6,
+      "tool_calls": 5,
+      "verification_attempts": 1,
+      "patch_lines": 2,
+      "runtime_seconds": 0.13,
+      "files_changed": [
+        "backend/app/api/cart.py"
+      ],
+      "error": null
+    }
+  ]
+}

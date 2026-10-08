@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #06090f;
+  --foreground: #f4f4f5;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: -apple-system, BlinkMacSystemFont, "Geist", "Plus Jakarta Sans", sans-serif;
+  overflow-x: hidden;
+}
+
+/* Subtle background glowing orbs */
+.bg-mesh {
+  background-image: 
+    radial-gradient(circle at 15% 20%, rgba(59, 130, 246, 0.05) 0%, transparent 40%),
+    radial-gradient(circle at 85% 15%, rgba(16, 185, 129, 0.04) 0%, transparent 40%),
+    radial-gradient(circle at 50% 80%, rgba(99, 102, 241, 0.04) 0%, transparent 50%);
+}
+
+/* Custom sleek scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
